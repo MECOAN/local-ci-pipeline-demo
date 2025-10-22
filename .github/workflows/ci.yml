@@ -1,0 +1,49 @@
+name: Local CI/CD Pipeline Simulation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      #Clone the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      #Configure python
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      
+      #Install the dependencies
+      - name: Install dependencies 
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+        
+      #Tests execution
+      - name: Run Tests
+        run: |
+          source venv/bin/activate
+          pytest tests/ --html=reports/report.html --self-contained-html
+      
+      #Store the reports
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report
+          path: reports/report.html
+
+      #Show the result
+      - name: Display test summary
+        run: |
+          echo "All tests executed successfully"
+          echo "Report stored as artifact: pytest-report"
