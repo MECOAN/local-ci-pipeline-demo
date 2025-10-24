@@ -28,7 +28,12 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-        
+      
+      - name: Build and Test inside Docker
+        run: |
+          docker build -t local-ci-pipeline .
+          docker run --rm local-ci-pipeline
+
       #Tests execution
       - name: Run Tests
         run: |

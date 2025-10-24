@@ -1,0 +1,8 @@
+venv/
+__pycache__/
+*.pyc
+*.log
+reports/test_results.txt
+reports/report.html
+.git
+.github
